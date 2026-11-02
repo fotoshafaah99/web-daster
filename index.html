@@ -62,7 +62,7 @@
         </div>
     </main>
 
-    <!-- Lightbox Zoom Modal Foto (Customer) -->
+    <!-- Lightbox Zoom Modal Foto -->
     <div id="image-zoom-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2" onclick="closeZoomModal()">
         <button onclick="closeZoomModal()" class="absolute top-4 right-4 text-white text-2xl z-50">
             <i class="fa-solid fa-xmark"></i>
@@ -240,7 +240,7 @@
 
             filteredKeys.forEach((id) => {
                 const item = allProductsData[id];
-                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Luxury'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
+                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Luxury Daster'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
                 const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
 
                 let images = [];
@@ -255,7 +255,6 @@
                 if (images.length > 1) {
                     thumbnailsHTML = `<div class="flex gap-1 mt-1.5 overflow-x-auto pb-1">`;
                     images.forEach((imgUrl) => {
-                        // Mengirimkan string aman menggunakan encodeURIComponent
                         thumbnailsHTML += `<img src="${imgUrl}" onclick="changeMainImage('${id}', '${encodeURIComponent(imgUrl)}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:border-rose-500 flex-shrink-0" onerror="this.src='https://via.placeholder.com/100'">`;
                     });
                     thumbnailsHTML += `</div>`;
@@ -269,7 +268,7 @@
                                      onclick="openZoomModal(this.src)" 
                                      class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in"
                                      onerror="this.src='https://via.placeholder.com/300'">
-                                <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Luxury'}</span>
+                                <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Luxury Daster'}</span>
                                 ${images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-images mr-1"></i>${images.length}</span>` : ''}
                             </div>
                             ${thumbnailsHTML}
@@ -285,7 +284,6 @@
             });
         }
 
-        // FUNGSI UTAMA YANG DIPERBAIKI: Mengganti foto dan memperbarui fungsi zoom langsung
         function changeMainImage(productId, encodedImgUrl) {
             const imgUrl = decodeURIComponent(encodedImgUrl);
             const imgElement = document.getElementById(`main-img-${productId}`);
@@ -306,7 +304,7 @@
             prodKeys.forEach(id => {
                 const item = allProductsData[id];
                 totalValue += Number(item.price || 0);
-                const cat = item.category || 'Lainnya';
+                const cat = item.category || 'Luxury Daster';
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
             });
 
@@ -351,7 +349,6 @@
             });
         }
 
-        // Simpan Biaya Operasional
         function saveExpense(e) {
             e.preventDefault();
             const name = document.getElementById('exp-name').value;
@@ -374,7 +371,6 @@
             }
         }
 
-        // Render List Produk di Panel Admin
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
             container.innerHTML = '';
@@ -393,7 +389,7 @@
                             <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
                                 <p class="font-bold text-gray-800 line-clamp-1">${item.name}</p>
-                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Luxury'})</p>
+                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Luxury Daster'})</p>
                             </div>
                         </div>
                         <div class="flex gap-1">
@@ -405,7 +401,6 @@
             });
         }
 
-        // Filter Kategori Customer
         function filterCategory(cat) {
             currentFilter = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -417,7 +412,6 @@
             renderCatalog();
         }
 
-        // Zoom Modal Controls
         function openZoomModal(imgUrl) {
             document.getElementById('zoomed-image').src = imgUrl;
             document.getElementById('image-zoom-modal').classList.remove('hidden');
@@ -430,7 +424,6 @@
             img.classList.toggle('scale-150');
         }
 
-        // Admin Modal & Tab Controls
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
@@ -455,7 +448,6 @@
             }
         }
 
-        // Simpan / Update Produk
         function saveProduct(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-product-id').value;
@@ -503,6 +495,7 @@
             document.getElementById('add-product-form').reset();
             document.getElementById('edit-product-id').value = '';
             document.getElementById('form-title').innerText = 'Tambah Produk Baru';
+            document.getElementById('p-category').value = 'Luxury Daster';
             document.getElementById('btn-submit-prod').innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Simpan Produk';
             document.getElementById('btn-cancel-edit').classList.add('hidden');
         }
