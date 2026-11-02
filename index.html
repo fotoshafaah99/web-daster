@@ -62,7 +62,7 @@
         </div>
     </main>
 
-    <!-- Lightbox Zoom Modal Foto -->
+    <!-- Lightbox Zoom Modal Foto (Customer) -->
     <div id="image-zoom-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2" onclick="closeZoomModal()">
         <button onclick="closeZoomModal()" class="absolute top-4 right-4 text-white text-2xl z-50">
             <i class="fa-solid fa-xmark"></i>
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <!-- Modal Admin -->
+    <!-- Modal Admin Main -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -151,16 +151,16 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 1 (Utama - Wajib Link Langsung .jpg/.png)</label>
-                            <input type="url" id="p-image1" placeholder="https://i.postimg.cc/..." required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 1 (Utama)</label>
+                            <input type="url" id="p-image1" placeholder="https://..." required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">URL Foto 2 (Opsional)</label>
-                            <input type="url" id="p-image2" placeholder="https://i.postimg.cc/..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                            <input type="url" id="p-image2" placeholder="https://..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">URL Foto 3 (Opsional)</label>
-                            <input type="url" id="p-image3" placeholder="https://i.postimg.cc/..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                            <input type="url" id="p-image3" placeholder="https://..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">Keterangan / Ukuran (LD & PB)</label>
@@ -265,7 +265,7 @@
                         <div>
                             <div class="relative group">
                                 <img id="main-img-${id}" src="${mainImg}" alt="${item.name}" 
-                                     onclick="openZoomModal('${mainImg}')" 
+                                     onclick="openZoomModal(this.src)" 
                                      class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in"
                                      onerror="this.src='https://via.placeholder.com/300'">
                                 <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Luxury'}</span>
@@ -284,6 +284,15 @@
             });
         }
 
+        // FUNGSI PERBAIKAN: Mengganti Foto Utama DAN Memperbarui Link Zoom
+        function changeMainImage(productId, imgUrl) {
+            const imgElement = document.getElementById(`main-img-${productId}`);
+            if (imgElement) {
+                imgElement.src = imgUrl;
+                imgElement.setAttribute('onclick', `openZoomModal('${imgUrl}')`);
+            }
+        }
+
         // Render Dashboard Keuangan & Biaya Ops
         function renderDashboard() {
             const prodKeys = Object.keys(allProductsData);
@@ -299,8 +308,6 @@
 
             document.getElementById('stat-total-val').innerText = 'Rp ' + totalValue.toLocaleString('id-ID');
 
-            // Hitung Total Biaya Ops
-            const expKeys = Object.keys(allProductsData); // wait, expKeys should be allExpensesData
             const expListKeys = Object.keys(allExpensesData);
             let totalOps = 0;
             const expContainer = document.getElementById('expense-list');
@@ -417,11 +424,6 @@
         }
         function toggleZoomScale(img) {
             img.classList.toggle('scale-150');
-        }
-
-        function changeMainImage(productId, imgUrl) {
-            const imgElement = document.getElementById(`main-img-${productId}`);
-            if (imgElement) imgElement.src = imgUrl;
         }
 
         // Admin Modal & Tab Controls
