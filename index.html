@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <!-- Product Grid (Real-time Live Sync) -->
+    <!-- Product Grid -->
     <main class="max-w-md mx-auto px-4 mt-4">
         <div class="flex items-center justify-between mb-3">
             <h3 class="font-serif font-bold text-gray-800 text-base" id="catalog-title">Koleksi Terbaru</h3>
@@ -62,7 +62,7 @@
         </div>
     </main>
 
-    <!-- Lightbox Zoom Modal Foto (Customer) -->
+    <!-- Lightbox Zoom Modal Foto -->
     <div id="image-zoom-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2" onclick="closeZoomModal()">
         <button onclick="closeZoomModal()" class="absolute top-4 right-4 text-white text-2xl z-50">
             <i class="fa-solid fa-xmark"></i>
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <!-- Modal Admin Main -->
+    <!-- Modal Admin -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -82,7 +82,7 @@
             <!-- Login View -->
             <div id="admin-login-view">
                 <h3 class="font-serif font-bold text-rose-900 text-lg mb-1">Login Admin</h3>
-                <p class="text-xs text-gray-500 mb-4">Masukkan PIN Admin untuk mengelola produk & melihat statistik.</p>
+                <p class="text-xs text-gray-500 mb-4">Masukkan PIN Admin untuk kelola produk & keuangan.</p>
                 <input type="password" id="admin-pin" placeholder="Masukkan PIN" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm mb-3 focus:outline-none focus:border-rose-400">
                 <button onclick="verifyAdminPIN()" class="w-full bg-rose-500 text-white font-bold py-2 rounded-xl text-sm shadow hover:bg-rose-600">Masuk</button>
             </div>
@@ -91,44 +91,58 @@
             <div id="admin-dashboard-view" class="hidden">
                 <!-- Nav Tab Admin -->
                 <div class="flex border-b border-gray-200 mb-4 text-xs font-bold">
-                    <button id="tab-btn-dash" onclick="switchAdminTab('dash')" class="py-2 px-4 text-rose-600 border-b-2 border-rose-600">Dashboard Penjualan</button>
-                    <button id="tab-btn-prod" onclick="switchAdminTab('prod')" class="py-2 px-4 text-gray-400 border-b-2 border-transparent">Kelola Produk</button>
+                    <button id="tab-btn-dash" onclick="switchAdminTab('dash')" class="py-2 px-3 text-rose-600 border-b-2 border-rose-600">Dashboard & Biaya</button>
+                    <button id="tab-btn-prod" onclick="switchAdminTab('prod')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kelola Produk</button>
                 </div>
 
-                <!-- TAB 1: Dashboard Analytics -->
+                <!-- TAB 1: Dashboard Penjualan & Biaya Operasional -->
                 <div id="admin-tab-dash">
-                    <h4 class="font-bold text-sm text-gray-800 mb-3">Statistik Toko</h4>
-                    <div class="grid grid-cols-2 gap-3 mb-4">
+                    <h4 class="font-bold text-sm text-gray-800 mb-2">Ringkasan Keuangan</h4>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
                         <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
-                            <p class="text-[10px] text-rose-600 font-bold uppercase">Total Produk</p>
-                            <h5 id="stat-total-prod" class="text-xl font-bold text-rose-900">0</h5>
+                            <p class="text-[10px] text-rose-600 font-bold uppercase">Total Nilai Produk</p>
+                            <h5 id="stat-total-val" class="text-xs font-bold text-rose-900 mt-1">Rp 0</h5>
                         </div>
-                        <div class="bg-green-50 p-3 rounded-xl border border-green-100">
-                            <p class="text-[10px] text-green-600 font-bold uppercase">Nilai Inventaris</p>
-                            <h5 id="stat-total-val" class="text-sm font-bold text-green-900">Rp 0</h5>
+                        <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
+                            <p class="text-[10px] text-amber-600 font-bold uppercase">Total Biaya Ops</p>
+                            <h5 id="stat-total-ops" class="text-xs font-bold text-amber-900 mt-1">Rp 0</h5>
                         </div>
                     </div>
-                    <h4 class="font-bold text-xs text-gray-700 mb-2">Sebaran Kategori</h4>
-                    <div id="category-stats" class="space-y-1.5 text-xs text-gray-600 mb-4"></div>
+
+                    <!-- Form Tambah Biaya Operasional -->
+                    <div class="bg-gray-50 p-3 rounded-xl border mb-4">
+                        <h5 class="font-bold text-xs text-gray-700 mb-2"><i class="fa-solid fa-receipt mr-1 text-rose-500"></i> Catat Biaya Operasional</h5>
+                        <form id="expense-form" onsubmit="saveExpense(event)" class="space-y-2">
+                            <input type="text" id="exp-name" placeholder="Nama Pengeluaran (Cth: Packing/Ads)" required class="w-full border rounded-lg px-2.5 py-1.5 text-xs bg-white">
+                            <input type="number" id="exp-amount" placeholder="Nominal (Rp)" required class="w-full border rounded-lg px-2.5 py-1.5 text-xs bg-white">
+                            <button type="submit" class="w-full bg-rose-600 text-white font-bold py-1.5 rounded-lg text-xs hover:bg-rose-700">Simpan Biaya</button>
+                        </form>
+                    </div>
+
+                    <h4 class="font-bold text-xs text-gray-700 mb-2">Daftar Biaya Operasional</h4>
+                    <div id="expense-list" class="space-y-1.5 max-h-36 overflow-y-auto mb-4 text-xs"></div>
+
+                    <h4 class="font-bold text-xs text-gray-700 mb-2">Sebaran Kategori Produk</h4>
+                    <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
                 </div>
 
-                <!-- TAB 2: Form & Daftar Edit Produk -->
+                <!-- TAB 2: Form & Daftar Produk -->
                 <div id="admin-tab-prod" class="hidden">
                     <h4 id="form-title" class="font-bold text-sm text-gray-800 mb-3">Tambah Produk Baru</h4>
-                    <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-3 mb-6">
+                    <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-2.5 mb-5">
                         <input type="hidden" id="edit-product-id" value="">
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">Nama Daster / Model</label>
-                            <input type="text" id="p-name" placeholder="Contoh: Daster Rayon Luxury" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1">
+                            <input type="text" id="p-name" placeholder="Contoh: Daster Rayon Luxury" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="text-[10px] text-gray-500 font-semibold">Harga (Rp)</label>
-                                <input type="number" id="p-price" placeholder="150000" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1">
+                                <input type="number" id="p-price" placeholder="150000" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                             </div>
                             <div>
                                 <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
-                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1 bg-white">
+                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white">
                                     <option value="Luxury Daster">Luxury Daster</option>
                                     <option value="Daster Ruffle">Daster Ruffle</option>
                                     <option value="Daster Busui">Daster Busui</option>
@@ -137,20 +151,20 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 1 (Utama)</label>
-                            <input type="url" id="p-image1" placeholder="https://... (Foto Depan)" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1">
+                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 1 (Utama - Wajib Link Langsung .jpg/.png)</label>
+                            <input type="url" id="p-image1" placeholder="https://i.postimg.cc/..." required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">URL Foto 2 (Opsional)</label>
-                            <input type="url" id="p-image2" placeholder="https://... (Foto Belakang)" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1">
+                            <input type="url" id="p-image2" placeholder="https://i.postimg.cc/..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">URL Foto 3 (Opsional)</label>
-                            <input type="url" id="p-image3" placeholder="https://... (Detail Motif)" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1">
+                            <input type="url" id="p-image3" placeholder="https://i.postimg.cc/..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">Keterangan / Ukuran (LD & PB)</label>
-                            <textarea id="p-desc" placeholder="LD 120cm, PB 140cm. Bahan adem." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-1" rows="2"></textarea>
+                            <textarea id="p-desc" placeholder="LD 120cm, PB 140cm. Bahan adem." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5" rows="2"></textarea>
                         </div>
                         <div class="flex gap-2">
                             <button type="submit" id="btn-submit-prod" class="flex-1 bg-green-600 text-white font-bold py-2 rounded-xl text-xs shadow hover:bg-green-700">
@@ -163,7 +177,7 @@
                     </form>
 
                     <h4 class="font-bold text-xs text-gray-700 mb-2 border-t pt-3">Daftar Produk (Edit / Hapus)</h4>
-                    <div id="admin-product-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    <div id="admin-product-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
                 </div>
             </div>
         </div>
@@ -187,18 +201,25 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const productsRef = database.ref('products');
+        const expensesRef = database.ref('expenses');
 
         const ADMIN_PIN = "AHS99!";
         const ADMIN_PHONE = "628561663426";
         let allProductsData = {};
+        let allExpensesData = {};
         let currentFilter = 'all';
 
-        // Realtime Listener Data Produk
+        // Realtime Listeners
         productsRef.on('value', (snapshot) => {
             allProductsData = snapshot.val() || {};
             renderCatalog();
             renderDashboard();
             renderAdminProductList();
+        });
+
+        expensesRef.on('value', (snapshot) => {
+            allExpensesData = snapshot.val() || {};
+            renderDashboard();
         });
 
         // Render Katalog Customer
@@ -234,7 +255,7 @@
                 if (images.length > 1) {
                     thumbnailsHTML = `<div class="flex gap-1 mt-1.5 overflow-x-auto pb-1">`;
                     images.forEach((imgUrl) => {
-                        thumbnailsHTML += `<img src="${imgUrl}" onclick="changeMainImage('${id}', '${imgUrl}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:border-rose-500 flex-shrink-0">`;
+                        thumbnailsHTML += `<img src="${imgUrl}" onclick="changeMainImage('${id}', '${imgUrl}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:border-rose-500 flex-shrink-0" onerror="this.src='https://via.placeholder.com/100'">`;
                     });
                     thumbnailsHTML += `</div>`;
                 }
@@ -245,7 +266,8 @@
                             <div class="relative group">
                                 <img id="main-img-${id}" src="${mainImg}" alt="${item.name}" 
                                      onclick="openZoomModal('${mainImg}')" 
-                                     class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in">
+                                     class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in"
+                                     onerror="this.src='https://via.placeholder.com/300'">
                                 <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Luxury'}</span>
                                 ${images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-images mr-1"></i>${images.length}</span>` : ''}
                             </div>
@@ -262,15 +284,13 @@
             });
         }
 
-        // Render Dashboard Penjualan
+        // Render Dashboard Keuangan & Biaya Ops
         function renderDashboard() {
-            const keys = Object.keys(allProductsData);
-            document.getElementById('stat-total-prod').innerText = keys.length;
-
+            const prodKeys = Object.keys(allProductsData);
             let totalValue = 0;
             let catCounts = {};
 
-            keys.forEach(id => {
+            prodKeys.forEach(id => {
                 const item = allProductsData[id];
                 totalValue += Number(item.price || 0);
                 const cat = item.category || 'Lainnya';
@@ -278,6 +298,35 @@
             });
 
             document.getElementById('stat-total-val').innerText = 'Rp ' + totalValue.toLocaleString('id-ID');
+
+            // Hitung Total Biaya Ops
+            const expKeys = Object.keys(allProductsData); // wait, expKeys should be allExpensesData
+            const expListKeys = Object.keys(allExpensesData);
+            let totalOps = 0;
+            const expContainer = document.getElementById('expense-list');
+            expContainer.innerHTML = '';
+
+            if (expListKeys.length === 0) {
+                expContainer.innerHTML = `<p class="text-gray-400 text-[11px]">Belum ada catatan biaya.</p>`;
+            }
+
+            expListKeys.forEach(id => {
+                const exp = allExpensesData[id];
+                totalOps += Number(exp.amount || 0);
+                expContainer.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
+                        <div>
+                            <span class="font-bold text-gray-800">${exp.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-rose-600 font-semibold">Rp ${Number(exp.amount).toLocaleString('id-ID')}</span>
+                            <button onclick="deleteExpense('${id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('stat-total-ops').innerText = 'Rp ' + totalOps.toLocaleString('id-ID');
 
             const catStatsContainer = document.getElementById('category-stats');
             catStatsContainer.innerHTML = '';
@@ -291,7 +340,30 @@
             });
         }
 
-        // Render List Produk di Panel Admin untuk Edit/Hapus
+        // Simpan Biaya Operasional
+        function saveExpense(e) {
+            e.preventDefault();
+            const name = document.getElementById('exp-name').value;
+            const amount = document.getElementById('exp-amount').value;
+
+            expensesRef.push().set({
+                name: name,
+                amount: amount,
+                createdAt: Date.now()
+            }, (err) => {
+                if(!err) {
+                    document.getElementById('expense-form').reset();
+                }
+            });
+        }
+
+        function deleteExpense(id) {
+            if(confirm('Hapus catatan biaya ini?')) {
+                expensesRef.child(id).remove();
+            }
+        }
+
+        // Render List Produk di Panel Admin
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
             container.innerHTML = '';
@@ -307,7 +379,7 @@
                 container.innerHTML += `
                     <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border text-xs">
                         <div class="flex items-center gap-2">
-                            <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg">
+                            <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
                                 <p class="font-bold text-gray-800 line-clamp-1">${item.name}</p>
                                 <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Luxury'})</p>
@@ -367,17 +439,17 @@
             if (tab === 'dash') {
                 document.getElementById('admin-tab-dash').classList.remove('hidden');
                 document.getElementById('admin-tab-prod').classList.add('hidden');
-                document.getElementById('tab-btn-dash').className = 'py-2 px-4 text-rose-600 border-b-2 border-rose-600';
-                document.getElementById('tab-btn-prod').className = 'py-2 px-4 text-gray-400 border-b-2 border-transparent';
+                document.getElementById('tab-btn-dash').className = 'py-2 px-3 text-rose-600 border-b-2 border-rose-600';
+                document.getElementById('tab-btn-prod').className = 'py-2 px-3 text-gray-400 border-b-2 border-transparent';
             } else {
                 document.getElementById('admin-tab-dash').classList.add('hidden');
                 document.getElementById('admin-tab-prod').classList.remove('hidden');
-                document.getElementById('tab-btn-prod').className = 'py-2 px-4 text-rose-600 border-b-2 border-rose-600';
-                document.getElementById('tab-btn-dash').className = 'py-2 px-4 text-gray-400 border-b-2 border-transparent';
+                document.getElementById('tab-btn-prod').className = 'py-2 px-3 text-rose-600 border-b-2 border-rose-600';
+                document.getElementById('tab-btn-dash').className = 'py-2 px-3 text-gray-400 border-b-2 border-transparent';
             }
         }
 
-        // Tambah / Update Produk di Firebase
+        // Simpan / Update Produk
         function saveProduct(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-product-id').value;
@@ -418,6 +490,7 @@
             document.getElementById('form-title').innerText = 'Edit Produk';
             document.getElementById('btn-submit-prod').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Update Produk';
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
+            switchAdminTab('prod');
         }
 
         function resetForm() {
