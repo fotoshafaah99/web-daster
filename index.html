@@ -34,14 +34,10 @@
         </div>
     </div>
 
-    <!-- Filter Kategori -->
+    <!-- Filter Kategori Dinamis -->
     <div class="max-w-md mx-auto px-4 mt-4">
         <div id="category-bar" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none text-xs">
-            <button onclick="filterCategory('all')" class="cat-btn active-cat bg-rose-500 text-white px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Semua</button>
-            <button onclick="filterCategory('Luxury Daster')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Luxury Daster</button>
-            <button onclick="filterCategory('Daster Ruffle')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Daster Ruffle</button>
-            <button onclick="filterCategory('Daster Busui')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Daster Busui</button>
-            <button onclick="filterCategory('Stelan Pyjamas')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Stelan Pyjamas</button>
+            <button onclick="filterCategory('all')" class="cat-btn bg-rose-500 text-white px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Semua</button>
         </div>
     </div>
 
@@ -93,6 +89,7 @@
                 <div class="flex border-b border-gray-200 mb-4 text-xs font-bold">
                     <button id="tab-btn-dash" onclick="switchAdminTab('dash')" class="py-2 px-3 text-rose-600 border-b-2 border-rose-600">Dashboard & Biaya</button>
                     <button id="tab-btn-prod" onclick="switchAdminTab('prod')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kelola Produk</button>
+                    <button id="tab-btn-cat" onclick="switchAdminTab('cat')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kelola Kategori</button>
                 </div>
 
                 <!-- TAB 1: Dashboard Penjualan & Biaya Operasional -->
@@ -133,7 +130,7 @@
                         <input type="hidden" id="edit-product-id" value="">
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">Nama Daster / Model</label>
-                            <input type="text" id="p-name" placeholder="Contoh: Daster Rayon Luxury" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                            <input type="text" id="p-name" placeholder="Contoh: Daster Rawis Luxury" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -142,12 +139,7 @@
                             </div>
                             <div>
                                 <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
-                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white">
-                                    <option value="Luxury Daster">Luxury Daster</option>
-                                    <option value="Daster Ruffle">Daster Ruffle</option>
-                                    <option value="Daster Busui">Daster Busui</option>
-                                    <option value="Stelan Pyjamas">Stelan Pyjamas</option>
-                                </select>
+                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white"></select>
                             </div>
                         </div>
                         <div>
@@ -179,6 +171,29 @@
                     <h4 class="font-bold text-xs text-gray-700 mb-2 border-t pt-3">Daftar Produk (Edit / Hapus)</h4>
                     <div id="admin-product-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
                 </div>
+
+                <!-- TAB 3: Kelola Nama Kategori -->
+                <div id="admin-tab-cat" class="hidden">
+                    <h4 class="font-bold text-sm text-gray-800 mb-3">Kelola Pilihan Kategori</h4>
+                    <form id="add-category-form" onsubmit="saveCategory(event)" class="space-y-2 mb-4">
+                        <input type="hidden" id="edit-cat-id" value="">
+                        <div>
+                            <label class="text-[10px] text-gray-500 font-semibold">Nama Kategori Baru / Edit</label>
+                            <input type="text" id="cat-name-input" placeholder="Contoh: Daster Rawis, Kaftan, dll" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" id="btn-submit-cat" class="flex-1 bg-rose-600 text-white font-bold py-1.5 rounded-xl text-xs hover:bg-rose-700">
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah Kategori
+                            </button>
+                            <button type="button" id="btn-cancel-cat" onclick="resetCatForm()" class="hidden bg-gray-300 text-gray-700 font-bold py-1.5 px-3 rounded-xl text-xs">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+
+                    <h4 class="font-bold text-xs text-gray-700 mb-2 border-t pt-3">Daftar Kategori Saat Ini</h4>
+                    <div id="admin-cat-list" class="space-y-1.5 max-h-48 overflow-y-auto text-xs"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -202,14 +217,31 @@
         const database = firebase.database();
         const productsRef = database.ref('products');
         const expensesRef = database.ref('expenses');
+        const categoriesRef = database.ref('categories');
 
         const ADMIN_PIN = "AHS99!";
         const ADMIN_PHONE = "628561663426";
         let allProductsData = {};
         let allExpensesData = {};
+        let allCategoriesData = {};
         let currentFilter = 'all';
 
-        // Realtime Listeners
+        // Inisialisasi default kategori jika masih kosong
+        categoriesRef.on('value', (snapshot) => {
+            allCategoriesData = snapshot.val() || {};
+            if (Object.keys(allCategoriesData).length === 0) {
+                // Kategori Bawaan Default
+                const defaultCats = ["Daster Rawis", "Daster Tangan Karet", "Kaftan", "Daster Ruffle", "Daster Busui"];
+                defaultCats.forEach(cat => categoriesRef.push().set({ name: cat }));
+                return;
+            }
+            renderCategoryBar();
+            renderCategorySelectOptions();
+            renderAdminCatList();
+            renderCatalog();
+            renderDashboard();
+        });
+
         productsRef.on('value', (snapshot) => {
             allProductsData = snapshot.val() || {};
             renderCatalog();
@@ -221,6 +253,91 @@
             allExpensesData = snapshot.val() || {};
             renderDashboard();
         });
+
+        // Render Tombol Filter Kategori di Halaman Utama (Customer)
+        function renderCategoryBar() {
+            const bar = document.getElementById('category-bar');
+            bar.innerHTML = `<button onclick="filterCategory('all')" class="cat-btn bg-rose-500 text-white px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Semua</button>`;
+            
+            Object.keys(allCategoriesData).forEach(id => {
+                const catName = allCategoriesData[id].name;
+                bar.innerHTML += `<button onclick="filterCategory('${catName}')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">${catName}</button>`;
+            });
+        }
+
+        // Render Pilihan Dropdown Kategori di Form Input/Edit Produk
+        function renderCategorySelectOptions() {
+            const select = document.getElementById('p-category');
+            select.innerHTML = '';
+            Object.keys(allCategoriesData).forEach(id => {
+                const catName = allCategoriesData[id].name;
+                select.innerHTML += `<option value="${catName}">${catName}</option>`;
+            });
+        }
+
+        // Render Daftar Kategori di Tab "Kelola Kategori"
+        function renderAdminCatList() {
+            const container = document.getElementById('admin-cat-list');
+            container.innerHTML = '';
+            const keys = Object.keys(allCategoriesData);
+
+            if (keys.length === 0) {
+                container.innerHTML = `<p class="text-gray-400">Belum ada kategori.</p>`;
+                return;
+            }
+
+            keys.forEach(id => {
+                const cat = allCategoriesData[id];
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border">
+                        <span class="font-bold text-gray-800">${cat.name}</span>
+                        <div class="flex gap-1">
+                            <button onclick="startEditCategory('${id}', '${cat.name}')" class="bg-blue-100 text-blue-600 p-1.5 rounded-lg hover:bg-blue-200"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteCategory('${id}')" class="bg-red-100 text-red-600 p-1.5 rounded-lg hover:bg-red-200"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Simpan / Edit Kategori Ke Firebase
+        function saveCategory(e) {
+            e.preventDefault();
+            const catId = document.getElementById('edit-cat-id').value;
+            const catName = document.getElementById('cat-name-input').value.trim();
+
+            if (!catName) return;
+
+            if (catId) {
+                categoriesRef.child(catId).update({ name: catName }, (err) => {
+                    if (!err) { alert('Nama Kategori berhasil diperbarui!'); resetCatForm(); }
+                });
+            } else {
+                categoriesRef.push().set({ name: catName }, (err) => {
+                    if (!err) { alert('Kategori baru berhasil ditambahkan!'); resetCatForm(); }
+                });
+            }
+        }
+
+        function startEditCategory(id, currentName) {
+            document.getElementById('edit-cat-id').value = id;
+            document.getElementById('cat-name-input').value = currentName;
+            document.getElementById('btn-submit-cat').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Update Kategori';
+            document.getElementById('btn-cancel-cat').classList.remove('hidden');
+        }
+
+        function resetCatForm() {
+            document.getElementById('add-category-form').reset();
+            document.getElementById('edit-cat-id').value = '';
+            document.getElementById('btn-submit-cat').innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Tambah Kategori';
+            document.getElementById('btn-cancel-cat').classList.add('hidden');
+        }
+
+        function deleteCategory(id) {
+            if (confirm('Yakin ingin menghapus kategori ini?')) {
+                categoriesRef.child(id).remove();
+            }
+        }
 
         // Render Katalog Customer
         function renderCatalog() {
@@ -240,7 +357,7 @@
 
             filteredKeys.forEach((id) => {
                 const item = allProductsData[id];
-                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Luxury Daster'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
+                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
                 const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
 
                 let images = [];
@@ -268,7 +385,7 @@
                                      onclick="openZoomModal(this.src)" 
                                      class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in"
                                      onerror="this.src='https://via.placeholder.com/300'">
-                                <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Luxury Daster'}</span>
+                                <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Daster'}</span>
                                 ${images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-images mr-1"></i>${images.length}</span>` : ''}
                             </div>
                             ${thumbnailsHTML}
@@ -289,13 +406,11 @@
             const imgElement = document.getElementById(`main-img-${productId}`);
             if (imgElement) {
                 imgElement.src = imgUrl;
-                imgElement.onclick = function() {
-                    openZoomModal(imgUrl);
-                };
+                imgElement.onclick = function() { openZoomModal(imgUrl); };
             }
         }
 
-        // Render Dashboard Keuangan & Biaya Ops
+        // Render Dashboard Keuangan
         function renderDashboard() {
             const prodKeys = Object.keys(allProductsData);
             let totalValue = 0;
@@ -304,7 +419,7 @@
             prodKeys.forEach(id => {
                 const item = allProductsData[id];
                 totalValue += Number(item.price || 0);
-                const cat = item.category || 'Luxury Daster';
+                const cat = item.category || 'Umum';
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
             });
 
@@ -353,22 +468,13 @@
             e.preventDefault();
             const name = document.getElementById('exp-name').value;
             const amount = document.getElementById('exp-amount').value;
-
-            expensesRef.push().set({
-                name: name,
-                amount: amount,
-                createdAt: Date.now()
-            }, (err) => {
-                if(!err) {
-                    document.getElementById('expense-form').reset();
-                }
+            expensesRef.push().set({ name, amount, createdAt: Date.now() }, (err) => {
+                if(!err) document.getElementById('expense-form').reset();
             });
         }
 
         function deleteExpense(id) {
-            if(confirm('Hapus catatan biaya ini?')) {
-                expensesRef.child(id).remove();
-            }
+            if(confirm('Hapus catatan biaya ini?')) expensesRef.child(id).remove();
         }
 
         function renderAdminProductList() {
@@ -389,7 +495,7 @@
                             <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
                                 <p class="font-bold text-gray-800 line-clamp-1">${item.name}</p>
-                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Luxury Daster'})</p>
+                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Daster'})</p>
                             </div>
                         </div>
                         <div class="flex gap-1">
@@ -420,9 +526,7 @@
             document.getElementById('image-zoom-modal').classList.add('hidden');
             document.getElementById('zoomed-image').classList.remove('scale-150');
         }
-        function toggleZoomScale(img) {
-            img.classList.toggle('scale-150');
-        }
+        function toggleZoomScale(img) { img.classList.toggle('scale-150'); }
 
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
@@ -435,17 +539,13 @@
         }
 
         function switchAdminTab(tab) {
-            if (tab === 'dash') {
-                document.getElementById('admin-tab-dash').classList.remove('hidden');
-                document.getElementById('admin-tab-prod').classList.add('hidden');
-                document.getElementById('tab-btn-dash').className = 'py-2 px-3 text-rose-600 border-b-2 border-rose-600';
-                document.getElementById('tab-btn-prod').className = 'py-2 px-3 text-gray-400 border-b-2 border-transparent';
-            } else {
-                document.getElementById('admin-tab-dash').classList.add('hidden');
-                document.getElementById('admin-tab-prod').classList.remove('hidden');
-                document.getElementById('tab-btn-prod').className = 'py-2 px-3 text-rose-600 border-b-2 border-rose-600';
-                document.getElementById('tab-btn-dash').className = 'py-2 px-3 text-gray-400 border-b-2 border-transparent';
-            }
+            const tabs = ['dash', 'prod', 'cat'];
+            tabs.forEach(t => {
+                document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = 'py-2 px-3 text-gray-400 border-b-2 border-transparent';
+            });
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).className = 'py-2 px-3 text-rose-600 border-b-2 border-rose-600';
         }
 
         function saveProduct(e) {
@@ -479,7 +579,7 @@
             document.getElementById('edit-product-id').value = id;
             document.getElementById('p-name').value = item.name || '';
             document.getElementById('p-price').value = item.price || '';
-            document.getElementById('p-category').value = item.category || 'Luxury Daster';
+            document.getElementById('p-category').value = item.category || '';
             document.getElementById('p-image1').value = item.image1 || item.image || '';
             document.getElementById('p-image2').value = item.image2 || '';
             document.getElementById('p-image3').value = item.image3 || '';
@@ -495,7 +595,6 @@
             document.getElementById('add-product-form').reset();
             document.getElementById('edit-product-id').value = '';
             document.getElementById('form-title').innerText = 'Tambah Produk Baru';
-            document.getElementById('p-category').value = 'Luxury Daster';
             document.getElementById('btn-submit-prod').innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Simpan Produk';
             document.getElementById('btn-cancel-edit').classList.add('hidden');
         }
