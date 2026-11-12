@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <!-- Product Grid -->
+    <!-- Product Grid (Ready Stock) -->
     <main class="max-w-md mx-auto px-4 mt-4">
         <div class="flex items-center justify-between mb-3">
             <h3 class="font-serif font-bold text-gray-800 text-base" id="catalog-title">Koleksi Terbaru</h3>
@@ -55,6 +55,16 @@
                 <i class="fa-solid fa-spinner fa-spin text-2xl text-rose-400 mb-2"></i>
                 <p>Memuat katalog produk...</p>
             </div>
+        </div>
+
+        <!-- Folder Sold Out (Arsip Terjual) -->
+        <div id="soldout-section" class="mt-8 pt-6 border-t border-gray-200 hidden">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-serif font-bold text-gray-500 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-box-archive text-rose-400"></i> Arsip Terjual (Sold Out)
+                </h3>
+            </div>
+            <div id="soldout-product-list" class="grid grid-cols-2 gap-3 opacity-75"></div>
         </div>
     </main>
 
@@ -89,7 +99,7 @@
                 <div class="flex border-b border-gray-200 mb-4 text-xs font-bold">
                     <button id="tab-btn-dash" onclick="switchAdminTab('dash')" class="py-2 px-3 text-rose-600 border-b-2 border-rose-600">Dashboard & Biaya</button>
                     <button id="tab-btn-prod" onclick="switchAdminTab('prod')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kelola Produk</button>
-                    <button id="tab-btn-cat" onclick="switchAdminTab('cat')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kelola Kategori</button>
+                    <button id="tab-btn-cat" onclick="switchAdminTab('cat')" class="py-2 px-3 text-gray-400 border-b-2 border-transparent">Kategori</button>
                 </div>
 
                 <!-- TAB 1: Dashboard Penjualan & Biaya Operasional -->
@@ -97,7 +107,7 @@
                     <h4 class="font-bold text-sm text-gray-800 mb-2">Ringkasan Keuangan</h4>
                     <div class="grid grid-cols-2 gap-2 mb-3">
                         <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
-                            <p class="text-[10px] text-rose-600 font-bold uppercase">Total Nilai Produk</p>
+                            <p class="text-[10px] text-rose-600 font-bold uppercase">Total Nilai Produk (Ready)</p>
                             <h5 id="stat-total-val" class="text-xs font-bold text-rose-900 mt-1">Rp 0</h5>
                         </div>
                         <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
@@ -123,7 +133,7 @@
                     <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
                 </div>
 
-                <!-- TAB 2: Form & Daftar Produk -->
+                <!-- TAB 2: Form & Daftar Produk (Mendukung 6 Foto & Status Sold Out) -->
                 <div id="admin-tab-prod" class="hidden">
                     <h4 id="form-title" class="font-bold text-sm text-gray-800 mb-3">Tambah Produk Baru</h4>
                     <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-2.5 mb-5">
@@ -138,22 +148,29 @@
                                 <input type="number" id="p-price" placeholder="150000" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
                             </div>
                             <div>
-                                <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
-                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white"></select>
+                                <label class="text-[10px] text-gray-500 font-semibold">Status Stok</label>
+                                <select id="p-status" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white font-bold text-rose-600">
+                                    <option value="ready">Ready Stock</option>
+                                    <option value="soldout">Sold Out (Terjual)</option>
+                                </select>
                             </div>
                         </div>
                         <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 1 (Utama)</label>
-                            <input type="url" id="p-image1" placeholder="https://..." required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                            <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
+                            <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white"></select>
                         </div>
-                        <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 2 (Opsional)</label>
-                            <input type="url" id="p-image2" placeholder="https://..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
+                        
+                        <!-- Input hingga 6 Foto -->
+                        <div class="bg-rose-50/50 p-2.5 rounded-xl border border-rose-100 space-y-2">
+                            <label class="text-[10px] text-rose-700 font-bold block"><i class="fa-solid fa-images mr-1"></i> URL Galeri Foto (Maksimal 6 Foto)</label>
+                            <input type="url" id="p-image1" placeholder="URL Foto 1 (Utama)" required class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
+                            <input type="url" id="p-image2" placeholder="URL Foto 2 (Opsional)" class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
+                            <input type="url" id="p-image3" placeholder="URL Foto 3 (Opsional)" class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
+                            <input type="url" id="p-image4" placeholder="URL Foto 4 (Opsional)" class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
+                            <input type="url" id="p-image5" placeholder="URL Foto 5 (Opsional)" class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
+                            <input type="url" id="p-image6" placeholder="URL Foto 6 (Opsional)" class="w-full border rounded-lg px-2.5 py-1 text-xs bg-white">
                         </div>
-                        <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">URL Foto 3 (Opsional)</label>
-                            <input type="url" id="p-image3" placeholder="https://..." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
-                        </div>
+
                         <div>
                             <label class="text-[10px] text-gray-500 font-semibold">Keterangan / Ukuran (LD & PB)</label>
                             <textarea id="p-desc" placeholder="LD 120cm, PB 140cm. Bahan adem." class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5" rows="2"></textarea>
@@ -172,7 +189,7 @@
                     <div id="admin-product-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
                 </div>
 
-                <!-- TAB 3: Kelola Nama Kategori -->
+                <!-- TAB 3: Kelola Kategori -->
                 <div id="admin-tab-cat" class="hidden">
                     <h4 class="font-bold text-sm text-gray-800 mb-3">Kelola Pilihan Kategori</h4>
                     <form id="add-category-form" onsubmit="saveCategory(event)" class="space-y-2 mb-4">
@@ -226,11 +243,9 @@
         let allCategoriesData = {};
         let currentFilter = 'all';
 
-        // Inisialisasi default kategori jika masih kosong
         categoriesRef.on('value', (snapshot) => {
             allCategoriesData = snapshot.val() || {};
             if (Object.keys(allCategoriesData).length === 0) {
-                // Kategori Bawaan Default
                 const defaultCats = ["Daster Rawis", "Daster Tangan Karet", "Kaftan", "Daster Ruffle", "Daster Busui"];
                 defaultCats.forEach(cat => categoriesRef.push().set({ name: cat }));
                 return;
@@ -238,8 +253,6 @@
             renderCategoryBar();
             renderCategorySelectOptions();
             renderAdminCatList();
-            renderCatalog();
-            renderDashboard();
         });
 
         productsRef.on('value', (snapshot) => {
@@ -254,18 +267,15 @@
             renderDashboard();
         });
 
-        // Render Tombol Filter Kategori di Halaman Utama (Customer)
         function renderCategoryBar() {
             const bar = document.getElementById('category-bar');
             bar.innerHTML = `<button onclick="filterCategory('all')" class="cat-btn bg-rose-500 text-white px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Semua</button>`;
-            
             Object.keys(allCategoriesData).forEach(id => {
                 const catName = allCategoriesData[id].name;
                 bar.innerHTML += `<button onclick="filterCategory('${catName}')" class="cat-btn bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap font-medium">${catName}</button>`;
             });
         }
 
-        // Render Pilihan Dropdown Kategori di Form Input/Edit Produk
         function renderCategorySelectOptions() {
             const select = document.getElementById('p-category');
             select.innerHTML = '';
@@ -275,18 +285,10 @@
             });
         }
 
-        // Render Daftar Kategori di Tab "Kelola Kategori"
         function renderAdminCatList() {
             const container = document.getElementById('admin-cat-list');
             container.innerHTML = '';
-            const keys = Object.keys(allCategoriesData);
-
-            if (keys.length === 0) {
-                container.innerHTML = `<p class="text-gray-400">Belum ada kategori.</p>`;
-                return;
-            }
-
-            keys.forEach(id => {
+            Object.keys(allCategoriesData).forEach(id => {
                 const cat = allCategoriesData[id];
                 container.innerHTML += `
                     <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border">
@@ -300,21 +302,18 @@
             });
         }
 
-        // Simpan / Edit Kategori Ke Firebase
         function saveCategory(e) {
             e.preventDefault();
             const catId = document.getElementById('edit-cat-id').value;
             const catName = document.getElementById('cat-name-input').value.trim();
-
             if (!catName) return;
-
             if (catId) {
                 categoriesRef.child(catId).update({ name: catName }, (err) => {
-                    if (!err) { alert('Nama Kategori berhasil diperbarui!'); resetCatForm(); }
+                    if (!err) { alert('Kategori diperbarui!'); resetCatForm(); }
                 });
             } else {
                 categoriesRef.push().set({ name: catName }, (err) => {
-                    if (!err) { alert('Kategori baru berhasil ditambahkan!'); resetCatForm(); }
+                    if (!err) { alert('Kategori ditambah!'); resetCatForm(); }
                 });
             }
         }
@@ -334,36 +333,33 @@
         }
 
         function deleteCategory(id) {
-            if (confirm('Yakin ingin menghapus kategori ini?')) {
-                categoriesRef.child(id).remove();
-            }
+            if (confirm('Hapus kategori ini?')) categoriesRef.child(id).remove();
         }
 
-        // Render Katalog Customer
+        // Render Katalog Ready & Folder Sold Out
         function renderCatalog() {
             const productContainer = document.getElementById('product-list');
+            const soldoutContainer = document.getElementById('soldout-product-list');
+            const soldoutSection = document.getElementById('soldout-section');
+            
             productContainer.innerHTML = '';
+            soldoutContainer.innerHTML = '';
 
             const keys = Object.keys(allProductsData);
-            let filteredKeys = keys.filter(id => {
-                if (currentFilter === 'all') return true;
-                return allProductsData[id].category === currentFilter;
-            });
+            let readyCount = 0;
+            let soldoutCount = 0;
 
-            if (filteredKeys.length === 0) {
-                productContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">Belum ada produk untuk kategori ini.</div>`;
-                return;
-            }
-
-            filteredKeys.forEach((id) => {
+            keys.forEach((id) => {
                 const item = allProductsData[id];
-                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
-                const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
+                const isSoldOut = item.status === 'soldout';
 
+                if (currentFilter !== 'all' && item.category !== currentFilter) return;
+
+                // Kumpulkan hingga 6 foto
                 let images = [];
-                if (item.image1) images.push(item.image1);
-                if (item.image2) images.push(item.image2);
-                if (item.image3) images.push(item.image3);
+                for (let i = 1; i <= 6; i++) {
+                    if (item[`image${i}`]) images.push(item[`image${i}`]);
+                }
                 if (images.length === 0 && item.image) images.push(item.image);
 
                 let mainImg = images[0] || 'https://via.placeholder.com/300';
@@ -372,33 +368,57 @@
                 if (images.length > 1) {
                     thumbnailsHTML = `<div class="flex gap-1 mt-1.5 overflow-x-auto pb-1">`;
                     images.forEach((imgUrl) => {
-                        thumbnailsHTML += `<img src="${imgUrl}" onclick="changeMainImage('${id}', '${encodeURIComponent(imgUrl)}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:border-rose-500 flex-shrink-0" onerror="this.src='https://via.placeholder.com/100'">`;
+                        thumbnailsHTML += `<img src="${imgUrl}" onclick="changeMainImage('${id}', '${encodeURIComponent(imgUrl)}')" class="w-8 h-8 object-cover rounded-md cursor-pointer border hover:border-rose-500 flex-shrink-0" onerror="this.src='https://via.placeholder.com/100'">`;
                     });
                     thumbnailsHTML += `</div>`;
                 }
 
-                productContainer.innerHTML += `
-                    <div class="bg-white rounded-2xl p-2.5 shadow-sm border border-rose-100 flex flex-col justify-between">
+                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
+                const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
+
+                let cardHTML = `
+                    <div class="bg-white rounded-2xl p-2.5 shadow-sm border ${isSoldOut ? 'border-gray-300 bg-gray-50' : 'border-rose-100'} flex flex-col justify-between relative">
                         <div>
                             <div class="relative group">
                                 <img id="main-img-${id}" src="${mainImg}" alt="${item.name}" 
                                      onclick="openZoomModal(this.src)" 
-                                     class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in"
+                                     class="w-full h-40 object-cover rounded-xl bg-gray-100 cursor-zoom-in ${isSoldOut ? 'grayscale' : ''}"
                                      onerror="this.src='https://via.placeholder.com/300'">
-                                <span class="absolute top-2 left-2 bg-rose-500/80 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-medium">${item.category || 'Daster'}</span>
+                                <span class="absolute top-2 left-2 ${isSoldOut ? 'bg-gray-800' : 'bg-rose-500/80'} text-white text-[9px] px-2 py-0.5 rounded-full font-medium">
+                                    ${isSoldOut ? 'SOLD OUT' : (item.category || 'Daster')}
+                                </span>
                                 ${images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-images mr-1"></i>${images.length}</span>` : ''}
                             </div>
                             ${thumbnailsHTML}
-                            <h4 class="font-bold text-xs text-gray-800 line-clamp-1 mt-2">${item.name}</h4>
-                            <p class="text-[11px] font-semibold text-rose-600 mt-0.5">Rp ${Number(item.price).toLocaleString('id-ID')}</p>
-                            <p class="text-[10px] text-gray-500 line-clamp-2 mt-1 whitespace-pre-line">${item.desc || ''}</p>
+                            <h4 class="font-bold text-xs ${isSoldOut ? 'text-gray-500 line-through' : 'text-gray-800'} line-clamp-1 mt-2">${item.name}</h4>
+                            <p class="text-[11px] font-semibold ${isSoldOut ? 'text-gray-400' : 'text-rose-600'} mt-0.5">Rp ${Number(item.price).toLocaleString('id-ID')}</p>
+                            <p class="text-[10px] text-gray-400 line-clamp-2 mt-1 whitespace-pre-line">${item.desc || ''}</p>
                         </div>
-                        <a href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">
-                            Beli via WA
-                        </a>
+                        ${isSoldOut ? 
+                            `<div class="mt-3 text-center bg-gray-200 text-gray-500 text-[11px] font-bold py-1.5 rounded-xl">Stok Habis</div>` :
+                            `<a href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">Beli via WA</a>`
+                        }
                     </div>
                 `;
+
+                if (isSoldOut) {
+                    soldoutContainer.innerHTML += cardHTML;
+                    soldoutCount++;
+                } else {
+                    productContainer.innerHTML += cardHTML;
+                    readyCount++;
+                }
             });
+
+            if (readyCount === 0) {
+                productContainer.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-400 text-xs">Belum ada produk ready untuk kategori ini.</div>`;
+            }
+
+            if (soldoutCount > 0) {
+                soldoutSection.classList.remove('hidden');
+            } else {
+                soldoutSection.classList.add('hidden');
+            }
         }
 
         function changeMainImage(productId, encodedImgUrl) {
@@ -410,7 +430,6 @@
             }
         }
 
-        // Render Dashboard Keuangan
         function renderDashboard() {
             const prodKeys = Object.keys(allProductsData);
             let totalValue = 0;
@@ -418,9 +437,11 @@
 
             prodKeys.forEach(id => {
                 const item = allProductsData[id];
-                totalValue += Number(item.price || 0);
-                const cat = item.category || 'Umum';
-                catCounts[cat] = (catCounts[cat] || 0) + 1;
+                if (item.status !== 'soldout') {
+                    totalValue += Number(item.price || 0);
+                    const cat = item.category || 'Umum';
+                    catCounts[cat] = (catCounts[cat] || 0) + 1;
+                }
             });
 
             document.getElementById('stat-total-val').innerText = 'Rp ' + totalValue.toLocaleString('id-ID');
@@ -439,12 +460,10 @@
                 totalOps += Number(exp.amount || 0);
                 expContainer.innerHTML += `
                     <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
-                        <div>
-                            <span class="font-bold text-gray-800">${exp.name}</span>
-                        </div>
+                        <span class="font-bold text-gray-800">${exp.name}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-rose-600 font-semibold">Rp ${Number(exp.amount).toLocaleString('id-ID')}</span>
-                            <button onclick="deleteExpense('${id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            <button onclick="deleteExpense('${id}')" class="text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>
                         </div>
                     </div>
                 `;
@@ -474,7 +493,7 @@
         }
 
         function deleteExpense(id) {
-            if(confirm('Hapus catatan biaya ini?')) expensesRef.child(id).remove();
+            if(confirm('Hapus biaya ini?')) expensesRef.child(id).remove();
         }
 
         function renderAdminProductList() {
@@ -489,13 +508,14 @@
 
             keys.forEach(id => {
                 const item = allProductsData[id];
+                const isSold = item.status === 'soldout';
                 container.innerHTML += `
                     <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border text-xs">
                         <div class="flex items-center gap-2">
-                            <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
+                            <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg ${isSold ? 'grayscale' : ''}" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
-                                <p class="font-bold text-gray-800 line-clamp-1">${item.name}</p>
-                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Daster'})</p>
+                                <p class="font-bold text-gray-800 line-clamp-1">${item.name} ${isSold ? '<span class="text-red-500 font-bold">(SOLD)</span>' : ''}</p>
+                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Umum'})</p>
                             </div>
                         </div>
                         <div class="flex gap-1">
@@ -554,10 +574,14 @@
             const productData = {
                 name: document.getElementById('p-name').value,
                 price: document.getElementById('p-price').value,
+                status: document.getElementById('p-status').value,
                 category: document.getElementById('p-category').value,
                 image1: document.getElementById('p-image1').value,
                 image2: document.getElementById('p-image2').value,
                 image3: document.getElementById('p-image3').value,
+                image4: document.getElementById('p-image4').value,
+                image5: document.getElementById('p-image5').value,
+                image6: document.getElementById('p-image6').value,
                 desc: document.getElementById('p-desc').value,
                 updatedAt: Date.now()
             };
@@ -579,10 +603,14 @@
             document.getElementById('edit-product-id').value = id;
             document.getElementById('p-name').value = item.name || '';
             document.getElementById('p-price').value = item.price || '';
+            document.getElementById('p-status').value = item.status || 'ready';
             document.getElementById('p-category').value = item.category || '';
             document.getElementById('p-image1').value = item.image1 || item.image || '';
             document.getElementById('p-image2').value = item.image2 || '';
             document.getElementById('p-image3').value = item.image3 || '';
+            document.getElementById('p-image4').value = item.image4 || '';
+            document.getElementById('p-image5').value = item.image5 || '';
+            document.getElementById('p-image6').value = item.image6 || '';
             document.getElementById('p-desc').value = item.desc || '';
 
             document.getElementById('form-title').innerText = 'Edit Produk';
