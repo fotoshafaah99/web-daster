@@ -34,8 +34,17 @@
         </div>
     </div>
 
-    <!-- Informasi Pembayaran Resmi & Tombol Salin -->
-    <div class="max-w-md mx-auto px-4 mt-3">
+    <!-- Informasi Pembayaran Resmi & Tombol Cek Ongkir J&T -->
+    <div class="max-w-md mx-auto px-4 mt-3 space-y-2">
+        <!-- Tombol Cek Ongkir J&T Resmi -->
+        <a href="https://jet.co.id/rates" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white py-2.5 px-4 rounded-2xl shadow-xs text-xs font-bold flex items-center justify-between transition">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-truck-fast text-sm"></i> Cek Ongkir J&T Express Resmi
+            </span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+
+        <!-- Info Pembayaran -->
         <div class="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-xs text-xs space-y-2">
             <p class="font-bold text-rose-900 flex items-center gap-1">
                 <i class="fa-solid fa-wallet text-rose-500"></i> Informasi Pembayaran Resmi:
@@ -164,7 +173,7 @@
                     <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
                 </div>
 
-                <!-- TAB 2: Form & Daftar Produk (Mendukung 2 Harga/Varian & 6 Foto) -->
+                <!-- TAB 2: Form & Daftar Produk -->
                 <div id="admin-tab-prod" class="hidden">
                     <h4 id="form-title" class="font-bold text-sm text-gray-800 mb-3">Tambah Produk Baru</h4>
                     <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-2.5 mb-5">
@@ -198,7 +207,7 @@
                                 </div>
                                 <div>
                                     <label class="text-[9px] text-gray-500">Harga 2 (Opsional: Jumbo)</label>
-                                    <input type="number" id="p-price2" placeholder="150000 (Kosongkan jika 1 harga)" class="w-full border rounded-lg px-2 py-1 text-xs bg-white">
+                                    <input type="number" id="p-price2" placeholder="150000" class="w-full border rounded-lg px-2 py-1 text-xs bg-white">
                                     <input type="text" id="p-label2" placeholder="Label (Cth: Jumbo)" class="w-full border rounded-lg px-2 py-1 text-[10px] bg-white mt-1">
                                 </div>
                             </div>
@@ -429,7 +438,6 @@
                     thumbnailsHTML += `</div>`;
                 }
 
-                // Cek apakah ada 2 harga
                 let priceDisplayHTML = '';
                 let variantSelectorHTML = '';
                 
