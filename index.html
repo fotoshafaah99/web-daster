@@ -34,15 +34,46 @@
         </div>
     </div>
 
+    <!-- Informasi Pembayaran dengan Tombol Salin -->
+    <div class="max-w-md mx-auto px-4 mt-3">
+        <div class="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-xs text-xs space-y-2">
+            <p class="font-bold text-rose-900 flex items-center gap-1">
+                <i class="fa-solid fa-wallet text-rose-500"></i> Informasi Pembayaran Resmi:
+            </p>
+            
+            <!-- BRI -->
+            <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-100">
+                <div>
+                    <p class="font-semibold text-gray-800">🏦 Bank BRI: <span id="bri-num" class="font-bold text-rose-700">483601024890501</span></p>
+                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAAH</p>
+                </div>
+                <button onclick="copyToClipboard('483601024890501', this)" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition flex items-center gap-1">
+                    <i class="fa-regular fa-copy"></i> Salin
+                </button>
+            </div>
+
+            <!-- DANA -->
+            <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-100">
+                <div>
+                    <p class="font-semibold text-gray-800">📱 DANA: <span id="dana-num" class="font-bold text-rose-700">08561663426</span></p>
+                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAAH</p>
+                </div>
+                <button onclick="copyToClipboard('08561663426', this)" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition flex items-center gap-1">
+                    <i class="fa-regular fa-copy"></i> Salin
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Filter Kategori Dinamis -->
-    <div class="max-w-md mx-auto px-4 mt-4">
+    <div class="max-w-md mx-auto px-4 mt-3">
         <div id="category-bar" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none text-xs">
             <button onclick="filterCategory('all')" class="cat-btn bg-rose-500 text-white px-3 py-1.5 rounded-full whitespace-nowrap font-medium">Semua</button>
         </div>
     </div>
 
     <!-- Product Grid (Ready Stock) -->
-    <main class="max-w-md mx-auto px-4 mt-4">
+    <main class="max-w-md mx-auto px-4 mt-3">
         <div class="flex items-center justify-between mb-3">
             <h3 class="font-serif font-bold text-gray-800 text-base" id="catalog-title">Koleksi Terbaru</h3>
             <span id="sync-status" class="text-[11px] text-green-600 font-medium flex items-center gap-1">
@@ -133,7 +164,7 @@
                     <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
                 </div>
 
-                <!-- TAB 2: Form & Daftar Produk (Mendukung 6 Foto & Status Sold Out) -->
+                <!-- TAB 2: Form & Daftar Produk -->
                 <div id="admin-tab-prod" class="hidden">
                     <h4 id="form-title" class="font-bold text-sm text-gray-800 mb-3">Tambah Produk Baru</h4>
                     <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-2.5 mb-5">
@@ -243,6 +274,23 @@
         let allCategoriesData = {};
         let currentFilter = 'all';
 
+        // Fungsi Salin Teks ke Clipboard
+        function copyToClipboard(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Tersalin!`;
+                btnElement.classList.remove('bg-rose-100', 'text-rose-700');
+                btnElement.classList.add('bg-green-600', 'text-white');
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                    btnElement.classList.remove('bg-green-600', 'text-white');
+                    btnElement.classList.add('bg-rose-100', 'text-rose-700');
+                }, 2000);
+            }).catch(err => {
+                alert('Gagal menyalin teks.');
+            });
+        }
+
         categoriesRef.on('value', (snapshot) => {
             allCategoriesData = snapshot.val() || {};
             if (Object.keys(allCategoriesData).length === 0) {
@@ -336,7 +384,6 @@
             if (confirm('Hapus kategori ini?')) categoriesRef.child(id).remove();
         }
 
-        // Render Katalog Ready & Folder Sold Out
         function renderCatalog() {
             const productContainer = document.getElementById('product-list');
             const soldoutContainer = document.getElementById('soldout-product-list');
@@ -355,7 +402,6 @@
 
                 if (currentFilter !== 'all' && item.category !== currentFilter) return;
 
-                // Kumpulkan hingga 6 foto
                 let images = [];
                 for (let i = 1; i <= 6; i++) {
                     if (item[`image${i}`]) images.push(item[`image${i}`]);
@@ -373,7 +419,7 @@
                     thumbnailsHTML += `</div>`;
                 }
 
-                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}`);
+                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}\n\n*Info Pembayaran:*\n- Bank BRI: 483601024890501 (a.n. NURSHIVA SHAFAH)\n- DANA: 08561663426 (a.n. NURSHIVA SHAFAH)`);
                 const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
 
                 let cardHTML = `
