@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <!-- Informasi Pembayaran dengan Tombol Salin -->
+    <!-- Informasi Pembayaran Resmi & Tombol Salin -->
     <div class="max-w-md mx-auto px-4 mt-3">
         <div class="bg-white p-3.5 rounded-2xl border border-rose-100 shadow-xs text-xs space-y-2">
             <p class="font-bold text-rose-900 flex items-center gap-1">
@@ -44,8 +44,8 @@
             <!-- BRI -->
             <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-100">
                 <div>
-                    <p class="font-semibold text-gray-800">🏦 Bank BRI: <span id="bri-num" class="font-bold text-rose-700">483601024890501</span></p>
-                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAAH</p>
+                    <p class="font-semibold text-gray-800">🏦 Bank BRI: <span class="font-bold text-rose-700">483601024890501</span></p>
+                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAH</p>
                 </div>
                 <button onclick="copyToClipboard('483601024890501', this)" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition flex items-center gap-1">
                     <i class="fa-regular fa-copy"></i> Salin
@@ -55,8 +55,8 @@
             <!-- DANA -->
             <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-100">
                 <div>
-                    <p class="font-semibold text-gray-800">📱 DANA: <span id="dana-num" class="font-bold text-rose-700">08561663426</span></p>
-                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAAH</p>
+                    <p class="font-semibold text-gray-800">📱 DANA: <span class="font-bold text-rose-700">08561663426</span></p>
+                    <p class="text-[10px] text-gray-500">a.n. NURSHIVA SHAFAH</p>
                 </div>
                 <button onclick="copyToClipboard('08561663426', this)" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition flex items-center gap-1">
                     <i class="fa-regular fa-copy"></i> Salin
@@ -164,7 +164,7 @@
                     <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
                 </div>
 
-                <!-- TAB 2: Form & Daftar Produk -->
+                <!-- TAB 2: Form & Daftar Produk (Mendukung 2 Harga/Varian & 6 Foto) -->
                 <div id="admin-tab-prod" class="hidden">
                     <h4 id="form-title" class="font-bold text-sm text-gray-800 mb-3">Tambah Produk Baru</h4>
                     <form id="add-product-form" onsubmit="saveProduct(event)" class="space-y-2.5 mb-5">
@@ -175,20 +175,33 @@
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="text-[10px] text-gray-500 font-semibold">Harga (Rp)</label>
-                                <input type="number" id="p-price" placeholder="150000" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5">
-                            </div>
-                            <div>
                                 <label class="text-[10px] text-gray-500 font-semibold">Status Stok</label>
                                 <select id="p-status" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white font-bold text-rose-600">
                                     <option value="ready">Ready Stock</option>
                                     <option value="soldout">Sold Out (Terjual)</option>
                                 </select>
                             </div>
+                            <div>
+                                <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
+                                <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white"></select>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
-                            <select id="p-category" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white"></select>
+
+                        <!-- Pengaturan 2 Harga / Varian -->
+                        <div class="bg-gray-50 p-2.5 rounded-xl border space-y-2">
+                            <label class="text-[10px] text-gray-700 font-bold block"><i class="fa-solid fa-tags mr-1 text-rose-500"></i> Pengaturan Harga & Varian</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[9px] text-gray-500">Harga 1 (Cth: Standar)</label>
+                                    <input type="number" id="p-price1" placeholder="130000" required class="w-full border rounded-lg px-2 py-1 text-xs bg-white">
+                                    <input type="text" id="p-label1" placeholder="Label (Cth: Standar)" class="w-full border rounded-lg px-2 py-1 text-[10px] bg-white mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-[9px] text-gray-500">Harga 2 (Opsional: Jumbo)</label>
+                                    <input type="number" id="p-price2" placeholder="150000 (Kosongkan jika 1 harga)" class="w-full border rounded-lg px-2 py-1 text-xs bg-white">
+                                    <input type="text" id="p-label2" placeholder="Label (Cth: Jumbo)" class="w-full border rounded-lg px-2 py-1 text-[10px] bg-white mt-1">
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Input hingga 6 Foto -->
@@ -274,7 +287,6 @@
         let allCategoriesData = {};
         let currentFilter = 'all';
 
-        // Fungsi Salin Teks ke Clipboard
         function copyToClipboard(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalHTML = btnElement.innerHTML;
@@ -286,8 +298,6 @@
                     btnElement.classList.remove('bg-green-600', 'text-white');
                     btnElement.classList.add('bg-rose-100', 'text-rose-700');
                 }, 2000);
-            }).catch(err => {
-                alert('Gagal menyalin teks.');
             });
         }
 
@@ -419,8 +429,32 @@
                     thumbnailsHTML += `</div>`;
                 }
 
-                const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nHarga: Rp ${Number(item.price).toLocaleString('id-ID')}\n\n*Info Pembayaran:*\n- Bank BRI: 483601024890501 (a.n. NURSHIVA SHAFAH)\n- DANA: 08561663426 (a.n. NURSHIVA SHAFAH)`);
-                const waLink = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
+                // Cek apakah ada 2 harga
+                let priceDisplayHTML = '';
+                let variantSelectorHTML = '';
+                
+                const p1 = Number(item.price1 || item.price || 0);
+                const l1 = item.label1 || 'Standar';
+                const p2 = Number(item.price2 || 0);
+                const l2 = item.label2 || 'Jumbo';
+
+                if (p2 > 0) {
+                    priceDisplayHTML = `Rp ${p1.toLocaleString('id-ID')} - Rp ${p2.toLocaleString('id-ID')}`;
+                    variantSelectorHTML = `
+                        <div class="mt-2">
+                            <label class="text-[9px] text-gray-500 block mb-0.5 font-semibold">Pilih Varian:</label>
+                            <select id="variant-${id}" onchange="updateWALink('${id}', ${p1}, ${p2}, '${l1}', '${l2}', '${item.name}', '${item.category || 'Umum'}')" class="w-full border rounded-lg px-2 py-1 text-[11px] bg-gray-50 font-medium">
+                                <option value="1">${l1} - Rp ${p1.toLocaleString('id-ID')}</option>
+                                <option value="2">${l2} - Rp ${p2.toLocaleString('id-ID')}</option>
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    priceDisplayHTML = `Rp ${p1.toLocaleString('id-ID')}`;
+                }
+
+                const initialWaMsg = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${item.name}*\nKategori: ${item.category || 'Umum'}\nVarian: ${l1}\nHarga: Rp ${p1.toLocaleString('id-ID')}\n\n*Info Pembayaran:*\n- Bank BRI: 483601024890501 (a.n. NURSHIVA SHAFAH)\n- DANA: 08561663426 (a.n. NURSHIVA SHAFAH)`);
+                const waLink = `https://wa.me/${ADMIN_PHONE}?text=${initialWaMsg}`;
 
                 let cardHTML = `
                     <div class="bg-white rounded-2xl p-2.5 shadow-sm border ${isSoldOut ? 'border-gray-300 bg-gray-50' : 'border-rose-100'} flex flex-col justify-between relative">
@@ -437,12 +471,13 @@
                             </div>
                             ${thumbnailsHTML}
                             <h4 class="font-bold text-xs ${isSoldOut ? 'text-gray-500 line-through' : 'text-gray-800'} line-clamp-1 mt-2">${item.name}</h4>
-                            <p class="text-[11px] font-semibold ${isSoldOut ? 'text-gray-400' : 'text-rose-600'} mt-0.5">Rp ${Number(item.price).toLocaleString('id-ID')}</p>
+                            <p class="text-[11px] font-semibold ${isSoldOut ? 'text-gray-400' : 'text-rose-600'} mt-0.5">${priceDisplayHTML}</p>
+                            ${variantSelectorHTML}
                             <p class="text-[10px] text-gray-400 line-clamp-2 mt-1 whitespace-pre-line">${item.desc || ''}</p>
                         </div>
                         ${isSoldOut ? 
                             `<div class="mt-3 text-center bg-gray-200 text-gray-500 text-[11px] font-bold py-1.5 rounded-xl">Stok Habis</div>` :
-                            `<a href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">Beli via WA</a>`
+                            `<a id="wa-btn-${id}" href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">Beli via WA</a>`
                         }
                     </div>
                 `;
@@ -467,6 +502,23 @@
             }
         }
 
+        function updateWALink(id, p1, p2, l1, l2, name, category) {
+            const selectEl = document.getElementById(`variant-${id}`);
+            const btnEl = document.getElementById(`wa-btn-${id}`);
+            const selectedVal = selectEl.value;
+
+            let chosenLabel = l1;
+            let chosenPrice = p1;
+
+            if (selectedVal === '2') {
+                chosenLabel = l2;
+                chosenPrice = p2;
+            }
+
+            const waMessage = encodeURIComponent(`Halo Admin SHIFASHAFA, saya mau pesan:\n*${name}*\nKategori: ${category}\nVarian: ${chosenLabel}\nHarga: Rp ${chosenPrice.toLocaleString('id-ID')}\n\n*Info Pembayaran:*\n- Bank BRI: 483601024890501 (a.n. NURSHIVA SHAFAH)\n- DANA: 08561663426 (a.n. NURSHIVA SHAFAH)`);
+            btnEl.href = `https://wa.me/${ADMIN_PHONE}?text=${waMessage}`;
+        }
+
         function changeMainImage(productId, encodedImgUrl) {
             const imgUrl = decodeURIComponent(encodedImgUrl);
             const imgElement = document.getElementById(`main-img-${productId}`);
@@ -484,7 +536,7 @@
             prodKeys.forEach(id => {
                 const item = allProductsData[id];
                 if (item.status !== 'soldout') {
-                    totalValue += Number(item.price || 0);
+                    totalValue += Number(item.price1 || item.price || 0);
                     const cat = item.category || 'Umum';
                     catCounts[cat] = (catCounts[cat] || 0) + 1;
                 }
@@ -555,13 +607,14 @@
             keys.forEach(id => {
                 const item = allProductsData[id];
                 const isSold = item.status === 'soldout';
+                const pr1 = Number(item.price1 || item.price || 0);
                 container.innerHTML += `
                     <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border text-xs">
                         <div class="flex items-center gap-2">
                             <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg ${isSold ? 'grayscale' : ''}" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
                                 <p class="font-bold text-gray-800 line-clamp-1">${item.name} ${isSold ? '<span class="text-red-500 font-bold">(SOLD)</span>' : ''}</p>
-                                <p class="text-[10px] text-rose-600">Rp ${Number(item.price).toLocaleString('id-ID')} (${item.category || 'Umum'})</p>
+                                <p class="text-[10px] text-rose-600">Rp ${pr1.toLocaleString('id-ID')} (${item.category || 'Umum'})</p>
                             </div>
                         </div>
                         <div class="flex gap-1">
@@ -619,7 +672,10 @@
             const editId = document.getElementById('edit-product-id').value;
             const productData = {
                 name: document.getElementById('p-name').value,
-                price: document.getElementById('p-price').value,
+                price1: document.getElementById('p-price1').value,
+                label1: document.getElementById('p-label1').value || 'Standar',
+                price2: document.getElementById('p-price2').value || '',
+                label2: document.getElementById('p-label2').value || 'Jumbo',
                 status: document.getElementById('p-status').value,
                 category: document.getElementById('p-category').value,
                 image1: document.getElementById('p-image1').value,
@@ -648,7 +704,10 @@
             const item = allProductsData[id];
             document.getElementById('edit-product-id').value = id;
             document.getElementById('p-name').value = item.name || '';
-            document.getElementById('p-price').value = item.price || '';
+            document.getElementById('p-price1').value = item.price1 || item.price || '';
+            document.getElementById('p-label1').value = item.label1 || 'Standar';
+            document.getElementById('p-price2').value = item.price2 || '';
+            document.getElementById('p-label2').value = item.label2 || 'Jumbo';
             document.getElementById('p-status').value = item.status || 'ready';
             document.getElementById('p-category').value = item.category || '';
             document.getElementById('p-image1').value = item.image1 || item.image || '';
