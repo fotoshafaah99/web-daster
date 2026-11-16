@@ -15,7 +15,7 @@
         <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
             <div>
                 <h1 class="font-serif font-bold text-lg text-rose-900 tracking-wide">SHIFASHAFA</h1>
-                <p class="text-[10px] text-rose-500 tracking-widest font-semibold uppercase">Luxury Daster Boutique Kekinian</p>
+                <p class="text-[10px] text-rose-500 tracking-widest font-semibold uppercase">Luxury Daster Boutique</p>
             </div>
             <button onclick="openAdminModal()" class="text-xs bg-rose-100 text-rose-700 px-3 py-1.5 rounded-full font-medium border border-rose-200 hover:bg-rose-200">
                 <i class="fa-solid fa-lock mr-1"></i> Admin Panel
@@ -27,7 +27,7 @@
     <div class="max-w-md mx-auto px-4 mt-4">
         <div class="bg-gradient-to-r from-rose-400 to-pink-500 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
             <h2 class="font-serif text-xl font-bold mb-1">Koleksi Daster Premium</h2>
-            <p class="text-xs text-rose-100 mb-3">Kain rayon viscose premiumadem, Bahan nyaman, dan tetap tampil elok elegan di manapun berada.</p>
+            <p class="text-xs text-rose-100 mb-3">Bahan adem, nyaman, dan tetap tampil elok elegan di rumah.</p>
             <a href="https://wa.me/628561663426" target="_blank" class="inline-block bg-white text-rose-600 text-xs font-bold px-4 py-2 rounded-xl shadow hover:bg-rose-50">
                 <i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> Hubungi CS
             </a>
@@ -149,15 +149,19 @@
 
                 <!-- TAB 1: Dashboard Penjualan & Biaya Operasional -->
                 <div id="admin-tab-dash">
-                    <h4 class="font-bold text-sm text-gray-800 mb-2">Ringkasan Keuangan</h4>
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                        <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
-                            <p class="text-[10px] text-rose-600 font-bold uppercase">Total Nilai Produk (Ready)</p>
-                            <h5 id="stat-total-val" class="text-xs font-bold text-rose-900 mt-1">Rp 0</h5>
+                    <h4 class="font-bold text-sm text-gray-800 mb-2">Ringkasan Keuangan & Stok</h4>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                            <p class="text-[9px] text-rose-600 font-bold uppercase">Total Nilai Produk</p>
+                            <h5 id="stat-total-val" class="text-[11px] font-bold text-rose-900 mt-1">Rp 0</h5>
                         </div>
-                        <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
-                            <p class="text-[10px] text-amber-600 font-bold uppercase">Total Biaya Ops</p>
-                            <h5 id="stat-total-ops" class="text-xs font-bold text-amber-900 mt-1">Rp 0</h5>
+                        <div class="bg-blue-50 p-2.5 rounded-xl border border-blue-100">
+                            <p class="text-[9px] text-blue-600 font-bold uppercase">Total Qty Ready</p>
+                            <h5 id="stat-total-qty" class="text-xs font-bold text-blue-900 mt-1">0 Pcs</h5>
+                        </div>
+                        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-100">
+                            <p class="text-[9px] text-amber-600 font-bold uppercase">Total Biaya Ops</p>
+                            <h5 id="stat-total-ops" class="text-[11px] font-bold text-amber-900 mt-1">Rp 0</h5>
                         </div>
                     </div>
 
@@ -172,10 +176,10 @@
                     </div>
 
                     <h4 class="font-bold text-xs text-gray-700 mb-2">Daftar Biaya Operasional</h4>
-                    <div id="expense-list" class="space-y-1.5 max-h-36 overflow-y-auto mb-4 text-xs"></div>
+                    <div id="expense-list" class="space-y-1.5 max-h-32 overflow-y-auto mb-4 text-xs"></div>
 
-                    <h4 class="font-bold text-xs text-gray-700 mb-2">Sebaran Kategori Produk</h4>
-                    <div id="category-stats" class="space-y-1 text-xs text-gray-600"></div>
+                    <h4 class="font-bold text-xs text-gray-700 mb-2">Sebaran Kategori & Stok Produk</h4>
+                    <div id="category-stats" class="space-y-1 text-xs text-gray-600 mb-4"></div>
                 </div>
 
                 <!-- TAB 2: Form & Daftar Produk -->
@@ -189,11 +193,8 @@
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="text-[10px] text-gray-500 font-semibold">Status Stok</label>
-                                <select id="p-status" class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 bg-white font-bold text-rose-600">
-                                    <option value="ready">Ready Stock</option>
-                                    <option value="soldout">Sold Out (Terjual)</option>
-                                </select>
+                                <label class="text-[10px] text-gray-500 font-semibold">Jumlah Stok (Qty)</label>
+                                <input type="number" id="p-qty" placeholder="10" value="10" min="0" required class="w-full border rounded-xl px-3 py-1.5 text-xs mt-0.5 font-bold text-blue-600 bg-white">
                             </div>
                             <div>
                                 <label class="text-[10px] text-gray-500 font-semibold">Kategori</label>
@@ -243,7 +244,7 @@
                         </div>
                     </form>
 
-                    <h4 class="font-bold text-xs text-gray-700 mb-2 border-t pt-3">Daftar Produk (Edit / Hapus)</h4>
+                    <h4 class="font-bold text-xs text-gray-700 mb-2 border-t pt-3">Daftar Produk (Edit / Hapus / Stok)</h4>
                     <div id="admin-product-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
                 </div>
 
@@ -422,7 +423,8 @@
 
             keys.forEach((id) => {
                 const item = allProductsData[id];
-                const isSoldOut = item.status === 'soldout';
+                const qty = Number(item.qty !== undefined ? item.qty : 10);
+                const isSoldOut = item.status === 'soldout' || qty <= 0;
 
                 if (currentFilter !== 'all' && item.category !== currentFilter) return;
 
@@ -480,6 +482,7 @@
                                 <span class="absolute top-2 left-2 ${isSoldOut ? 'bg-gray-800' : 'bg-rose-500/80'} text-white text-[9px] px-2 py-0.5 rounded-full font-medium">
                                     ${isSoldOut ? 'SOLD OUT' : (item.category || 'Daster')}
                                 </span>
+                                ${!isSoldOut ? `<span class="absolute top-2 right-2 bg-blue-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold">Stok: ${qty}</span>` : ''}
                                 ${images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-images mr-1"></i>${images.length}</span>` : ''}
                             </div>
                             ${thumbnailsHTML}
@@ -490,7 +493,7 @@
                         </div>
                         ${isSoldOut ? 
                             `<div class="mt-3 text-center bg-gray-200 text-gray-500 text-[11px] font-bold py-1.5 rounded-xl">Stok Habis</div>` :
-                            `<a id="wa-btn-${id}" href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">Beli via WA</a>`
+                            `<a id="wa-btn-${id}" onclick="handleBuyClick('${id}', ${qty})" href="${waLink}" target="_blank" class="mt-3 block w-full text-center bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 rounded-xl shadow-xs">Beli via WA</a>`
                         }
                     </div>
                 `;
@@ -512,6 +515,18 @@
                 soldoutSection.classList.remove('hidden');
             } else {
                 soldoutSection.classList.add('hidden');
+            }
+        }
+
+        // Fungsi Otomatis Kurang Qty saat Customer Klik Beli via WA
+        function handleBuyClick(productId, currentQty) {
+            if (currentQty > 0) {
+                const newQty = currentQty - 1;
+                let updateData = { qty: newQty };
+                if (newQty === 0) {
+                    updateData.status = 'soldout';
+                }
+                productsRef.child(productId).update(updateData);
             }
         }
 
@@ -544,18 +559,22 @@
         function renderDashboard() {
             const prodKeys = Object.keys(allProductsData);
             let totalValue = 0;
+            let totalQty = 0;
             let catCounts = {};
 
             prodKeys.forEach(id => {
                 const item = allProductsData[id];
-                if (item.status !== 'soldout') {
-                    totalValue += Number(item.price1 || item.price || 0);
+                const qty = Number(item.qty !== undefined ? item.qty : 10);
+                if (item.status !== 'soldout' && qty > 0) {
+                    totalValue += Number(item.price1 || item.price || 0) * qty;
+                    totalQty += qty;
                     const cat = item.category || 'Umum';
-                    catCounts[cat] = (catCounts[cat] || 0) + 1;
+                    catCounts[cat] = (catCounts[cat] || 0) + qty;
                 }
             });
 
             document.getElementById('stat-total-val').innerText = 'Rp ' + totalValue.toLocaleString('id-ID');
+            document.getElementById('stat-total-qty').innerText = totalQty + ' Pcs';
 
             const expListKeys = Object.keys(allExpensesData);
             let totalOps = 0;
@@ -588,7 +607,7 @@
                 catStatsContainer.innerHTML += `
                     <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
                         <span>${cat}</span>
-                        <span class="font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md text-[10px]">${catCounts[cat]} produk</span>
+                        <span class="font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md text-[10px]">${catCounts[cat]} Pcs (Ready)</span>
                     </div>
                 `;
             });
@@ -619,15 +638,16 @@
 
             keys.forEach(id => {
                 const item = allProductsData[id];
-                const isSold = item.status === 'soldout';
+                const qty = Number(item.qty !== undefined ? item.qty : 10);
+                const isSold = item.status === 'soldout' || qty <= 0;
                 const pr1 = Number(item.price1 || item.price || 0);
                 container.innerHTML += `
                     <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border text-xs">
                         <div class="flex items-center gap-2">
                             <img src="${item.image1 || item.image}" class="w-10 h-10 object-cover rounded-lg ${isSold ? 'grayscale' : ''}" onerror="this.src='https://via.placeholder.com/100'">
                             <div>
-                                <p class="font-bold text-gray-800 line-clamp-1">${item.name} ${isSold ? '<span class="text-red-500 font-bold">(SOLD)</span>' : ''}</p>
-                                <p class="text-[10px] text-rose-600">Rp ${pr1.toLocaleString('id-ID')} (${item.category || 'Umum'})</p>
+                                <p class="font-bold text-gray-800 line-clamp-1">${item.name} ${isSold ? '<span class="text-red-500 font-bold">(HABIS)</span>' : ''}</p>
+                                <p class="text-[10px] text-rose-600">Rp ${pr1.toLocaleString('id-ID')} | <span class="font-bold text-blue-600">Stok: ${qty} Pcs</span></p>
                             </div>
                         </div>
                         <div class="flex gap-1">
@@ -683,13 +703,15 @@
         function saveProduct(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-product-id').value;
+            const qtyInput = Number(document.getElementById('p-qty').value);
             const productData = {
                 name: document.getElementById('p-name').value,
+                qty: qtyInput,
                 price1: document.getElementById('p-price1').value,
                 label1: document.getElementById('p-label1').value || 'Standar',
                 price2: document.getElementById('p-price2').value || '',
                 label2: document.getElementById('p-label2').value || 'Jumbo',
-                status: document.getElementById('p-status').value,
+                status: qtyInput <= 0 ? 'soldout' : 'ready',
                 category: document.getElementById('p-category').value,
                 image1: document.getElementById('p-image1').value,
                 image2: document.getElementById('p-image2').value,
@@ -703,7 +725,7 @@
 
             if (editId) {
                 productsRef.child(editId).update(productData, (err) => {
-                    if (!err) { alert('Produk berhasil diperbarui!'); resetForm(); }
+                    if (!err) { alert('Produk & Stok berhasil diperbarui!'); resetForm(); }
                 });
             } else {
                 productData.createdAt = Date.now();
@@ -717,11 +739,11 @@
             const item = allProductsData[id];
             document.getElementById('edit-product-id').value = id;
             document.getElementById('p-name').value = item.name || '';
+            document.getElementById('p-qty').value = item.qty !== undefined ? item.qty : 10;
             document.getElementById('p-price1').value = item.price1 || item.price || '';
             document.getElementById('p-label1').value = item.label1 || 'Standar';
             document.getElementById('p-price2').value = item.price2 || '';
             document.getElementById('p-label2').value = item.label2 || 'Jumbo';
-            document.getElementById('p-status').value = item.status || 'ready';
             document.getElementById('p-category').value = item.category || '';
             document.getElementById('p-image1').value = item.image1 || item.image || '';
             document.getElementById('p-image2').value = item.image2 || '';
@@ -731,7 +753,7 @@
             document.getElementById('p-image6').value = item.image6 || '';
             document.getElementById('p-desc').value = item.desc || '';
 
-            document.getElementById('form-title').innerText = 'Edit Produk';
+            document.getElementById('form-title').innerText = 'Edit Produk & Stok';
             document.getElementById('btn-submit-prod').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Update Produk';
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
             switchAdminTab('prod');
@@ -740,6 +762,7 @@
         function resetForm() {
             document.getElementById('add-product-form').reset();
             document.getElementById('edit-product-id').value = '';
+            document.getElementById('p-qty').value = '10';
             document.getElementById('form-title').innerText = 'Tambah Produk Baru';
             document.getElementById('btn-submit-prod').innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Simpan Produk';
             document.getElementById('btn-cancel-edit').classList.add('hidden');
